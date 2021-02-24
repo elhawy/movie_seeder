@@ -30,9 +30,7 @@ final class NotificationMakeCommand extends GeneratorCommand
 
     public function getDefaultNamespace() : string
     {
-        $module = $this->laravel['modules'];
-
-        return $module->config('paths.generator.notifications.namespace') ?: $module->config('paths.generator.notifications.path', 'Notifications');
+        return $this->laravel['modules']->config('paths.generator.notifications.path', 'Notifications');
     }
 
     /**

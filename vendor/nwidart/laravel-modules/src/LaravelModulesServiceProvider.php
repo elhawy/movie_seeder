@@ -3,7 +3,6 @@
 namespace Nwidart\Modules;
 
 use Nwidart\Modules\Contracts\RepositoryInterface;
-use Nwidart\Modules\Exceptions\InvalidActivatorClass;
 use Nwidart\Modules\Support\Stub;
 
 class LaravelModulesServiceProvider extends ModulesServiceProvider
@@ -32,8 +31,7 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     public function setupStubPath()
     {
-        $path = $this->app['config']->get('modules.stubs.path') ?? __DIR__ . '/Commands/stubs';
-        Stub::setBasePath($path);
+        Stub::setBasePath(__DIR__ . '/Commands/stubs');
 
         $this->app->booted(function ($app) {
             /** @var RepositoryInterface $moduleRepository */
@@ -53,16 +51,6 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
             $path = $app['config']->get('modules.paths.modules');
 
             return new Laravel\LaravelFileRepository($app, $path);
-        });
-        $this->app->singleton(Contracts\ActivatorInterface::class, function ($app) {
-            $activator = $app['config']->get('modules.activator');
-            $class = $app['config']->get('modules.activators.' . $activator)['class'];
-
-            if ($class === null) {
-                throw InvalidActivatorClass::missingConfig();
-            }
-
-            return new $class($app);
         });
         $this->app->alias(Contracts\RepositoryInterface::class, 'modules');
     }

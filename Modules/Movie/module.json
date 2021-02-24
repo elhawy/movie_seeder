@@ -3,7 +3,8 @@
     "alias": "movie",
     "description": "",
     "keywords": [],
-    "priority": 0,
+    "active": 1,
+    "order": 0,
     "providers": [
         "Modules\\Movie\\Providers\\MovieServiceProvider"
     ],

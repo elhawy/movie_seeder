@@ -117,16 +117,14 @@ class ControllerMakeCommand extends GeneratorCommand
 
     public function getDefaultNamespace() : string
     {
-        $module = $this->laravel['modules'];
-
-        return $module->config('paths.generator.controller.namespace') ?: $module->config('paths.generator.controller.path', 'Http/Controllers');
+        return $this->laravel['modules']->config('paths.generator.controller.path', 'Http/Controllers');
     }
 
     /**
      * Get the stub file name based on the options
      * @return string
      */
-    protected function getStubName()
+    private function getStubName()
     {
         if ($this->option('plain') === true) {
             $stub = '/controller-plain.stub';

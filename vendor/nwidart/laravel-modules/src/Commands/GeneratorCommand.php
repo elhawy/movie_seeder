@@ -32,7 +32,7 @@ abstract class GeneratorCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle() : int
+    public function handle()
     {
         $path = str_replace('\\', '/', $this->getDestinationFilePath());
 
@@ -49,11 +49,7 @@ abstract class GeneratorCommand extends Command
             $this->info("Created : {$path}");
         } catch (FileAlreadyExistException $e) {
             $this->error("File : {$path} already exists.");
-
-            return E_ERROR;
         }
-
-        return 0;
     }
 
     /**

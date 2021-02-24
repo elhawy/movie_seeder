@@ -2,7 +2,6 @@
 
 namespace Nwidart\Modules\Commands;
 
-use ErrorException;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Str;
@@ -34,8 +33,9 @@ class SeedCommand extends Command
 
     /**
      * Execute the console command.
+     * @throws FatalThrowableError
      */
-    public function handle() : int
+    public function handle()
     {
         try {
             if ($name = $this->argument('module')) {
@@ -46,20 +46,13 @@ class SeedCommand extends Command
                 array_walk($modules, [$this, 'moduleSeed']);
                 $this->info('All modules seeded.');
             }
-        } catch (\Error $e) {
-            $e = new ErrorException($e->getMessage(), $e->getCode(), 1, $e->getFile(), $e->getLine(), $e);
+        } catch (\Throwable $e) {
             $this->reportException($e);
+
             $this->renderException($this->getOutput(), $e);
 
-            return E_ERROR;
-        } catch (\Exception $e) {
-            $this->reportException($e);
-            $this->renderException($this->getOutput(), $e);
-
-            return E_ERROR;
+            return 1;
         }
-
-        return 0;
     }
 
     /**
@@ -166,8 +159,8 @@ class SeedCommand extends Command
         $name = Str::studly($name);
 
         $namespace = $this->laravel['modules']->config('namespace');
-        $config = GenerateConfigReader::read('seeder');
-        $seederPath = str_replace('/', '\\', $config->getPath());
+        $seederPath = GenerateConfigReader::read('seeder');
+        $seederPath = str_replace('/', '\\', $seederPath->getPath());
 
         return $namespace . '\\' . $name . '\\' . $seederPath . '\\' . $name . 'DatabaseSeeder';
     }
@@ -202,7 +195,7 @@ class SeedCommand extends Command
      * @param  \Throwable  $e
      * @return void
      */
-    protected function renderException($output, \Exception $e)
+    protected function renderException($output, \Throwable $e)
     {
         $this->laravel[ExceptionHandler::class]->renderForConsole($output, $e);
     }
@@ -213,7 +206,7 @@ class SeedCommand extends Command
      * @param  \Throwable  $e
      * @return void
      */
-    protected function reportException(\Exception $e)
+    protected function reportException(\Throwable $e)
     {
         $this->laravel[ExceptionHandler::class]->report($e);
     }

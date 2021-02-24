@@ -34,7 +34,7 @@ class MigrateCommand extends Command
      *
      * @return mixed
      */
-    public function handle() : int
+    public function handle()
     {
         $this->module = $this->laravel['modules'];
 
@@ -43,9 +43,7 @@ class MigrateCommand extends Command
         if ($name) {
             $module = $this->module->findOrFail($name);
 
-            $this->migrate($module);
-
-            return 0;
+            return $this->migrate($module);
         }
 
         foreach ($this->module->getOrdered($this->option('direction')) as $module) {
@@ -53,8 +51,6 @@ class MigrateCommand extends Command
 
             $this->migrate($module);
         }
-
-        return 0;
     }
 
     /**
@@ -78,7 +74,7 @@ class MigrateCommand extends Command
         ]);
 
         if ($this->option('seed')) {
-            $this->call('module:seed', ['module' => $module->getName(), '--force' => $this->option('force')]);
+            $this->call('module:seed', ['module' => $module->getName()]);
         }
     }
 

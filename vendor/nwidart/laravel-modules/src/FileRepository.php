@@ -226,7 +226,6 @@ abstract class FileRepository implements RepositoryInterface, Countable
     {
         $modules = [];
 
-        /** @var Module $module */
         foreach ($this->all() as $name => $module) {
             if ($module->isStatus($status)) {
                 $modules[$name] = $module;
@@ -255,7 +254,7 @@ abstract class FileRepository implements RepositoryInterface, Countable
      */
     public function allEnabled() : array
     {
-        return $this->getByStatus(true);
+        return $this->getByStatus(1);
     }
 
     /**
@@ -265,7 +264,7 @@ abstract class FileRepository implements RepositoryInterface, Countable
      */
     public function allDisabled() : array
     {
-        return $this->getByStatus(false);
+        return $this->getByStatus(0);
     }
 
     /**
@@ -290,22 +289,24 @@ abstract class FileRepository implements RepositoryInterface, Countable
         $modules = $this->allEnabled();
 
         uasort($modules, function (Module $a, Module $b) use ($direction) {
-            if ($a->get('priority') === $b->get('priority')) {
+            if ($a->order == $b->order) {
                 return 0;
             }
 
-            if ($direction === 'desc') {
-                return $a->get('priority') < $b->get('priority') ? 1 : -1;
+            if ($direction == 'desc') {
+                return $a->order < $b->order ? 1 : -1;
             }
 
-            return $a->get('priority') > $b->get('priority') ? 1 : -1;
+            return $a->order > $b->order ? 1 : -1;
         });
 
         return $modules;
     }
 
     /**
-     * @inheritDoc
+     * Get a module path.
+     *
+     * @return string
      */
     public function getPath() : string
     {
@@ -313,9 +314,9 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Register the modules.
      */
-    public function register(): void
+    public function register()
     {
         foreach ($this->getOrdered() as $module) {
             $module->register();
@@ -323,9 +324,9 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Boot the modules.
      */
-    public function boot(): void
+    public function boot()
     {
         foreach ($this->getOrdered() as $module) {
             $module->boot();
@@ -333,9 +334,11 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Find a specific module.
+     * @param $name
+     * @return mixed|void
      */
-    public function find(string $name)
+    public function find($name)
     {
         foreach ($this->all() as $module) {
             if ($module->getLowerName() === strtolower($name)) {
@@ -347,9 +350,11 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Find a specific module by its alias.
+     * @param $alias
+     * @return mixed|void
      */
-    public function findByAlias(string $alias)
+    public function findByAlias($alias)
     {
         foreach ($this->all() as $module) {
             if ($module->getAlias() === $alias) {
@@ -361,9 +366,13 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Find all modules that are required by a module. If the module cannot be found, throw an exception.
+     *
+     * @param $name
+     * @return array
+     * @throws ModuleNotFoundException
      */
-    public function findRequirements($name): array
+    public function findRequirements($name)
     {
         $requirements = [];
 
@@ -385,7 +394,7 @@ abstract class FileRepository implements RepositoryInterface, Countable
      *
      * @throws ModuleNotFoundException
      */
-    public function findOrFail(string $name)
+    public function findOrFail($name)
     {
         $module = $this->find($name);
 
@@ -425,9 +434,13 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Get asset path for a specific module.
+     *
+     * @param $module
+     *
+     * @return string
      */
-    public function assetPath(string $module) : string
+    public function assetPath($module) : string
     {
         return $this->config('paths.assets') . '/' . $module;
     }
@@ -535,19 +548,25 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Determine whether the given module is activated.
+     * @param string $name
+     * @return bool
+     * @throws ModuleNotFoundException
      */
-    public function isEnabled(string $name) : bool
+    public function enabled($name) : bool
     {
-        return $this->findOrFail($name)->isEnabled();
+        return $this->findOrFail($name)->enabled();
     }
 
     /**
-     * @inheritDoc
+     * Determine whether the given module is not activated.
+     * @param string $name
+     * @return bool
+     * @throws ModuleNotFoundException
      */
-    public function isDisabled(string $name) : bool
+    public function disabled($name) : bool
     {
-        return !$this->isEnabled($name);
+        return !$this->enabled($name);
     }
 
     /**
@@ -573,9 +592,12 @@ abstract class FileRepository implements RepositoryInterface, Countable
     }
 
     /**
-     * @inheritDoc
+     * Delete a specific module.
+     * @param string $name
+     * @return bool
+     * @throws \Nwidart\Modules\Exceptions\ModuleNotFoundException
      */
-    public function delete(string $name) : bool
+    public function delete($name) : bool
     {
         return $this->findOrFail($name)->delete();
     }

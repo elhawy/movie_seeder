@@ -26,19 +26,17 @@ class PublishConfigurationCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle() : int
+    public function handle()
     {
         if ($module = $this->argument('module')) {
             $this->publishConfiguration($module);
 
-            return 0;
+            return;
         }
 
         foreach ($this->laravel['modules']->allEnabled() as $module) {
             $this->publishConfiguration($module->getName());
         }
-
-        return 0;
     }
 
     /**

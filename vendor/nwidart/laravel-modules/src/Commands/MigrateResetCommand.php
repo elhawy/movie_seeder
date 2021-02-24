@@ -34,7 +34,7 @@ class MigrateResetCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle() : int
+    public function handle()
     {
         $this->module = $this->laravel['modules'];
 
@@ -43,7 +43,7 @@ class MigrateResetCommand extends Command
         if (!empty($name)) {
             $this->reset($name);
 
-            return 0;
+            return;
         }
 
         foreach ($this->module->getOrdered($this->option('direction')) as $module) {
@@ -51,8 +51,6 @@ class MigrateResetCommand extends Command
 
             $this->reset($module);
         }
-
-        return 0;
     }
 
     /**
