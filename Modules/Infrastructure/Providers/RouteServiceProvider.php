@@ -1,13 +1,9 @@
 <?php
 
-namespace Modules\Movie\Providers;
+namespace Modules\Infrastructure\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Modules\Movie\Repositories\MovieRepository;
-use Modules\Movie\Repositories\Interfaces\MovieRepositoryInterface;
-use Modules\Movie\Services\MovieService;
-use Modules\Movie\Services\Interfaces\MovieServiceInterface;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -16,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $moduleNamespace = 'Modules\Movie\Http\Controllers';
+    protected $moduleNamespace = 'Modules\Infrastructure\Http\Controllers';
 
     /**
      * Called before routes are registered.
@@ -28,8 +24,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        $this->app->bind(MovieServiceInterface::class, MovieService::class);
-        $this->app->bind(MovieRepositoryInterface::class, MovieRepository::class);
     }
 
     /**

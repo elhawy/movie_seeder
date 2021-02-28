@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\Movie\Entities\Movie;
 
 class ExampleTest extends TestCase
 {
@@ -14,6 +15,8 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
+        dd(factory(Movie::class)->create());
+
         $this->assertTrue(true);
     }
 }

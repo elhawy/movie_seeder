@@ -4,7 +4,8 @@ namespace Modules\Movie\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Movie extends Model
+class Category extends Model
 {
     protected $guarded = [];
+    protected $table = 'categories';
 }

@@ -4,6 +4,7 @@ namespace Modules\Movie\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Movie\Entities\Movie;
 
 class MovieDatabaseSeederTableSeeder extends Seeder
 {
@@ -15,7 +16,10 @@ class MovieDatabaseSeederTableSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
-        // $this->call("OthersTableSeeder");
+        try {
+            factory(Movie::class)->create();
+        } catch (\Exception $e) {
+            \Log::error($e);
+        }
     }
 }

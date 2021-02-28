@@ -4,10 +4,17 @@ namespace Modules\Movie\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Modules\Infrastructure\Http\Controllers\BaseController as Controller;
+use Modules\Movie\Services\Interfaces\MovieServiceInterface;
 
 class MovieController extends Controller
 {
+    protected $movieService;
+
+    public function __construct(MovieServiceInterface $movieService)
+    {
+        $this->movieService = $movieService;
+    }
     /**
      * Display a listing of the resource.
      * @return Response
