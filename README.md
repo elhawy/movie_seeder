@@ -63,7 +63,8 @@ fc17d00a2d7b   mysql:5.7    "docker-entrypoint.s…"   About a minute ago   Up A
 6b6321bfc48e   laravelapp   "docker-php-entrypoi…"   About a minute ago   Up About a minute   0.0.0.0:8080->80/tcp   to_do_list_app_1
 
 ```
-then run
+
+choose mysql then run
 ``` 
 mysql -u root -p
 ```
@@ -79,6 +80,9 @@ exit;
 ```
 finally
 docker-compose exec app composer install
+$ php artisan migrate
+$ php artisan seed
+```
 ```
 
 ### List Movies
