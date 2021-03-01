@@ -5,6 +5,7 @@ namespace Modules\Movie\Console;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Modules\Movie\Entities\Movie;
 
 class CreateMoviesCommand extends Command
 {
@@ -13,7 +14,9 @@ class CreateMoviesCommand extends Command
      *
      * @var string
      */
-    protected $name = 'movies:seed {number_of_record=4}';
+    protected $name = 'movies:seed';
+
+    protected $signature = 'movies:seed {number_of_record}';
 
     /**
      * The console command description.
@@ -39,31 +42,7 @@ class CreateMoviesCommand extends Command
      */
     public function handle()
     {
-        \Log::info("hello \n");
-        $number = $this->option('number_of_record');
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['example', InputArgument::REQUIRED, 'An example argument.'],
-        ];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
-        ];
+        $count = $this->argument('number_of_record');
+        factory(Movie::class, (int) $count)->create();
     }
 }
