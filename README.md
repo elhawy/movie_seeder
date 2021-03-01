@@ -1,8 +1,7 @@
-# movie_seeder
-Movie Api
-<p align="center"><h1>To Do List</h1></p>
+Movie Seeder Api
+<p align="center"><h1>Movie Seeder</h1></p>
 
-## About To do List
+## About Movie Seeder
 
 Create schedule that runs every {configrable_interval_timer} to Seed the “recently
 movies” and “top rated movies” including the movie “genres” with {num_of_records} for
